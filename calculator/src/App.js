@@ -4,6 +4,7 @@ import ButtonBox from "./components/ButtonBox";
 import Button from "./components/Button";
 import React, { useState } from "react";
 
+
 const btnValues = [
   ["C", "+-", "%", "/"],
   [7, 8, 9, "X"],
@@ -11,6 +12,14 @@ const btnValues = [
   [1, 2, 3, "+"],
   [0, ".", "="],
 ];
+/**takes a number, formats it into the string format 
+ * and creates the space separators for the thousand mark */
+const toLocaleString = (num) =>
+  String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
+
+/**removes the spaces, so that the string
+ * can later convert it to number */
+const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 
 const App = () => {
     let [calc, setCalc] = useState({
