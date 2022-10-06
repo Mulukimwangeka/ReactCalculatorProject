@@ -46,6 +46,21 @@ const App = () => {
       num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
     });
   };
+
+//signClickHandler in place 
+
+  const signClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
+  
+    setCalc({
+      ...calc,
+      sign: value,
+      res: !calc.res && calc.num ? calc.num : calc.res,
+      num: 0,
+    });
+  };
+
   return (
     <Wrapper>
      <Screen value={calc.num ? calc.num : calc.res} />
