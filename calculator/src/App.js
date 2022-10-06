@@ -18,7 +18,7 @@ const App = () => {
     num: 0,
     res: 0,
   });
-
+//numclickHandler in place 
   const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
@@ -36,7 +36,16 @@ const App = () => {
       });
     }
   };
+//commaClickHandler in place 
+  const commaClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHTML;
   
+    setCalc({
+      ...calc,
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+    });
+  };
   return (
     <Wrapper>
      <Screen value={calc.num ? calc.num : calc.res} />
