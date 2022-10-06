@@ -20,7 +20,7 @@ const App = () => {
   });
   return (
     <Wrapper>
-      <Screen value='0' />
+     <Screen value={calc.num ? calc.num : calc.res} />
       <ButtonBox>
         {
           btnValues.flat().map((btn, i) => {
