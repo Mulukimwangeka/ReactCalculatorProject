@@ -1,9 +1,9 @@
+import React, { useState } from "react";
+
 import Wrapper from "./components/Wrapper";
 import Screen from "./components/Screen";
 import ButtonBox from "./components/ButtonBox";
 import Button from "./components/Button";
-import React, { useState } from "react";
-
 
 const btnValues = [
   ["C", "+-", "%", "/"],
@@ -12,56 +12,51 @@ const btnValues = [
   [1, 2, 3, "+"],
   [0, ".", "="],
 ];
-/**takes a number, formats it into the string format 
- * and creates the space separators for the thousand mark */
+
 const toLocaleString = (num) =>
   String(num).replace(/(?<!\..*)(\d)(?=(?:\d{3})+(?:\.|$))/g, "$1 ");
 
-/**removes the spaces, so that the string
- * can later convert it to number */
 const removeSpaces = (num) => num.toString().replace(/\s/g, "");
 
 const App = () => {
-    let [calc, setCalc] = useState({
+  let [calc, setCalc] = useState({
     sign: "",
     num: 0,
     res: 0,
   });
-//numclickHandler in place 
+
   const numClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
 
-    if (calc.num.length < 16) {
+    if (removeSpaces(calc.num).length < 16) {
       setCalc({
         ...calc,
         num:
           calc.num === 0 && value === "0"
             ? "0"
-            : calc.num % 1 === 0
-            ? Number(calc.num + value)
-            : calc.num + value,
+            : removeSpaces(calc.num) % 1 === 0
+            ? toLocaleString(Number(removeSpaces(calc.num + value)))
+            : toLocaleString(calc.num + value),
         res: !calc.sign ? 0 : calc.res,
       });
     }
   };
-//commaClickHandler in place 
+
   const commaClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-  
+
     setCalc({
       ...calc,
       num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
     });
   };
 
-//signClickHandler in place 
-
   const signClickHandler = (e) => {
     e.preventDefault();
     const value = e.target.innerHTML;
-  
+
     setCalc({
       ...calc,
       sign: value,
@@ -69,7 +64,7 @@ const App = () => {
       num: 0,
     });
   };
-//equalsClickHandler in place 
+
   const equalsClickHandler = () => {
     if (calc.sign && calc.num) {
       const math = (a, b, sign) =>
@@ -80,34 +75,38 @@ const App = () => {
           : sign === "X"
           ? a * b
           : a / b;
-  
+
       setCalc({
         ...calc,
         res:
           calc.num === "0" && calc.sign === "/"
             ? "Can't divide with 0"
-            : math(Number(calc.res), Number(calc.num), calc.sign),
+            : toLocaleString(
+                math(
+                  Number(removeSpaces(calc.res)),
+                  Number(removeSpaces(calc.num)),
+                  calc.sign
+                )
+              ),
         sign: "",
         num: 0,
       });
     }
   };
-  //invertClickHandler added
 
   const invertClickHandler = () => {
     setCalc({
       ...calc,
-      num: calc.num ? calc.num * -1 : 0,
-      res: calc.res ? calc.res * -1 : 0,
+      num: calc.num ? toLocaleString(removeSpaces(calc.num) * -1) : 0,
+      res: calc.res ? toLocaleString(removeSpaces(calc.res) * -1) : 0,
       sign: "",
     });
   };
 
-  //PercentClickHandler added 
   const percentClickHandler = () => {
-    let num = calc.num ? parseFloat(calc.num) : 0;
-    let res = calc.res ? parseFloat(calc.res) : 0;
-  
+    let num = calc.num ? parseFloat(removeSpaces(calc.num)) : 0;
+    let res = calc.res ? parseFloat(removeSpaces(calc.res)) : 0;
+
     setCalc({
       ...calc,
       num: (num /= Math.pow(100, 1)),
@@ -116,7 +115,6 @@ const App = () => {
     });
   };
 
-  //resetclickandler added
   const resetClickHandler = () => {
     setCalc({
       ...calc,
@@ -125,11 +123,12 @@ const App = () => {
       res: 0,
     });
   };
+
   return (
     <Wrapper>
-     <Screen value={calc.num ? calc.num : calc.res} />
+      <Screen value={calc.num ? calc.num : calc.res} />
       <ButtonBox>
-      {btnValues.flat().map((btn, i) => {
+        {btnValues.flat().map((btn, i) => {
           return (
             <Button
               key={i}
@@ -157,4 +156,5 @@ const App = () => {
     </Wrapper>
   );
 };
+
 export default App;
